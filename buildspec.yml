@@ -1,0 +1,27 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region ap-southeast-1)
+      - echo Preparing the vendor
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the binary
+      - make docker-build
+      - echo Building the Docker image...
+      - docker build -t aws_test:1.1 .
+      - docker tag aws_test:1.1 787128671221.dkr.ecr.ap-southeast-1.amazonaws.com/common:1.1
+  post_build:
+    commands:
+        - echo Build completed on `date`
+        - echo Pushing the Docker image...
+        - docker push 787128671221.dkr.ecr.ap-southeast-1.amazonaws.com/common:1.1
+        - echo Writing image definitions file...
+        - printf '[{"name":"%s","imageUri":"%s"}]' common_service 787128671221.dkr.ecr.ap-southeast-1.amazonaws.com/common:1.1 > imagedefinitions.json
+
+artifacts:
+    files:
+        - imagedefinitions.json
