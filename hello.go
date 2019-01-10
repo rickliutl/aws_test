@@ -1,5 +1,8 @@
 package main
-import "fmt"
+import 
+("fmt"
+"time"
+)
 
 func main() {
   fmt.Println("hello world")
@@ -8,4 +11,8 @@ func main() {
   fmt.Println(true && false)
   fmt.Println(true || false)
   fmt.Println(!true)
+  for {
+    fmt.Println("alive..")
+    time.Sleep(time.Second * 5)
+  }
 }
